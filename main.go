@@ -4,9 +4,10 @@ import "fmt"
 
 func main() {
 	guesser := NewGuesser()
-	benchmark := NewBenchmark(guesser)
+	guesser.guessWord("___", []int{0,1,2}, []rune("ab"))
+	// benchmark := NewBenchmark(guesser)
 	fmt.Println("New benchmark initialised!")
-	benchmark.RunBenchmark()
+	// benchmark.RunBenchmark()
 }
 
 type DummyGuesser struct{}
