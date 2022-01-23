@@ -8,3 +8,4 @@ Run with
 go run *.go
 ```
 
+word_dictionary.txt includes a small subset of 5 letter long words I found in free data sample from www.wordfrequency.info

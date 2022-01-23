@@ -13,12 +13,12 @@ type Benchmark struct {
 func NewBenchmark(guesser WordleGuesser) *Benchmark {
 	return &Benchmark{
 		guesser:           guesser,
-		maxGuessesPerGame: 5,
+		maxGuessesPerGame: 10,
 	}
 }
 
 func (b *Benchmark) RunBenchmark() {
-	testWords := []string{"anime", "hello"}
+	testWords := []string{"write", "bring", "story", "today", "begin", "right", "money"}
 	testGuesses := make([]int, len(testWords))
 	totalGuesses := 0
 	for idx, testWord := range testWords {

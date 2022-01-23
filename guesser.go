@@ -12,13 +12,11 @@ type Guesser struct {
 }
 
 func NewGuesser() *Guesser {
-	return &Guesser{
-		dictionary: map[string]bool{
-			"hello": true,
-			"anime": true,
-			"magic": true,
-		},
-	}
+	return &Guesser{}
+}
+
+func (g *Guesser) SetDictionary(dictionary map[string]bool) {
+	g.dictionary = dictionary
 }
 
 func (g *Guesser) NewGame() {
@@ -31,10 +29,16 @@ func (g *Guesser) NewGame() {
 	}
 }
 func (g *Guesser) NextGuess() string {
-	defer func() { fmt.Println("total calls in try:", g.totalRecCalls) }()
-	return g.guessWord(g.nextGuess, g.nextIndices)
+	defer func() { 
+		fmt.Println("total calls in try:", g.totalRecCalls) 
+		g.totalRecCalls = 0
+		}()
+	guess := g.guessWord(g.nextGuess, g.nextIndices)
+	fmt.Println("guess ->",guess)
+	return guess
 }
 func (g *Guesser) Feedback(guess string, feedback []WordleResponse) {
+	g.nextIndices = []int{}
 	for idx, outcome := range feedback {
 		correct := false
 		char := rune(guess[idx])
@@ -51,6 +55,7 @@ func (g *Guesser) Feedback(guess string, feedback []WordleResponse) {
 			g.nextIndices = append(g.nextIndices, idx)
 		}
 	}
+	fmt.Println("next guess:", g.nextGuess, g.nextIndices)
 }
 
 func (g *Guesser) guessWord(guess string, indices []int) string {
