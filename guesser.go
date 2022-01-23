@@ -15,7 +15,6 @@ func NewGuesser() *Guesser {
 			"hello": true,
 			"anime": true,
 			"magic": true,
-			"bx": true,
 		},
 	}
 }
@@ -30,32 +29,28 @@ func (g *Guesser) NewGame() {
 	fmt.Println(g.availableChars)
 }
 func (g *Guesser) NextGuess() string {
-	return "hello"
+	return g.guessWord("_____", []int{0,1,2,3,4}, g.availableChars)
 }
 func (*Guesser) Feedback(guess string, feedback []WordleResponse) {}
 
 func (g *Guesser) guessWord(guess string, indices []int, availableChars []rune) string {
-	// fmt.Println(guess, indices)
 	if len(indices) == 0 {
+		// fmt.Println(guess, indices)
 		return guess
 	}
 
-	for i, idx := range indices {
-		remainingIndcies := make([]int, len(indices))
-		copy(remainingIndcies, indices)
-		remainingIndcies = remainingIndcies[i+1:]
-		// fmt.Println("idx:", indices, "rem idxs:", remainingIndcies)
-		for _, c := range availableChars {
-			newGuess := replaceAtIndex(guess, c, idx)
-			fmt.Println("i", i,"idx", idx, "indexes", indices, "newGuess", newGuess)
-			output := g.guessWord(newGuess, remainingIndcies, availableChars)
-			if ok := g.dictionary[output]; ok {
-				return output
-			}
+	remainingIndcies := make([]int, len(indices))
+	copy(remainingIndcies, indices)
+	remainingIndcies = remainingIndcies[1:]
+	for _, c := range availableChars {
+		newGuess := replaceAtIndex(guess, c, indices[0])
+		output := g.guessWord(newGuess, remainingIndcies, availableChars)
+		
+		if ok := g.dictionary[output]; ok {
+			return output
 		}
 	}
-	fmt.Println("returning")
-	return ""
+	return "xxxxx"
 }
 
 func replaceAtIndex(in string, r rune, i int) string {
