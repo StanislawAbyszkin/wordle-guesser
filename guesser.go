@@ -12,7 +12,6 @@ type Guesser struct {
 }
 
 func NewGuesser() *Guesser {
-	_ = fmt.Sprint()
 	return &Guesser{
 		dictionary: map[string]bool{
 			"hello": true,
@@ -71,7 +70,7 @@ func (g *Guesser) guessWord(guess string, indices []int) string {
 			return output
 		}
 	}
-	return "xxxxx"
+	return "-----"
 }
 
 func replaceAtIndex(in string, r rune, i int) string {

@@ -1,7 +1,10 @@
 # wordle-guesser
-Wordle guesser
+Project still WIP.
+
+Wordle guesser. Implementing brute force wordle guesser. Package provides benchmark struct, which can test any benchmark as long as it implements WordleGuesser interface.
 
 Run with 
 ```
 go run *.go
 ```
+
