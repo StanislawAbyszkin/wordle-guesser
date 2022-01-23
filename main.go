@@ -4,7 +4,6 @@ import "fmt"
 
 func main() {
 	guesser := NewGuesser()
-	guesser.guessWord("_b_", []int{0,2}, []rune("abcd"))
 	fmt.Println("New benchmark initialised. Starting benchmark.")
 	benchmark := NewBenchmark(guesser)
 	benchmark.RunBenchmark()
@@ -12,10 +11,8 @@ func main() {
 
 type DummyGuesser struct{}
 
-func(*DummyGuesser) NewGame() {}
-func(*DummyGuesser) NextGuess() string {
+func (*DummyGuesser) NewGame() {}
+func (*DummyGuesser) NextGuess() string {
 	return "hello"
 }
-func(*DummyGuesser) Feedback(guess string, feedback []WordleResponse) {}
-
-
+func (*DummyGuesser) Feedback(guess string, feedback []WordleResponse) {}

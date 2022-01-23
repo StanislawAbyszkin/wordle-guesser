@@ -28,7 +28,6 @@ func (b *Benchmark) RunBenchmark() {
 			guess := b.guesser.NextGuess()
 			totalGuesses++
 			currentTestGuesses++
-			fmt.Println("test Word:",testWord, "guess:", guess)
 			if testWord == guess {
 				break
 			}

@@ -4,12 +4,15 @@ import "fmt"
 
 type Guesser struct {
 	previousGuesses []string
-	availableChars  []rune
+	availableChars  map[rune]bool
 	nextGuess       string
+	nextIndices     []int
 	dictionary      map[string]bool
+	totalRecCalls   int
 }
 
 func NewGuesser() *Guesser {
+	_ = fmt.Sprint()
 	return &Guesser{
 		dictionary: map[string]bool{
 			"hello": true,
@@ -21,32 +24,50 @@ func NewGuesser() *Guesser {
 
 func (g *Guesser) NewGame() {
 	g.previousGuesses = []string{}
-	g.availableChars = []rune{}
-	g.nextGuess = ""
+	g.availableChars = map[rune]bool{}
+	g.nextGuess = "-----"
+	g.nextIndices = []int{0, 1, 2, 3, 4}
 	for i := 97; i < 97+26; i++ {
-		g.availableChars = append(g.availableChars, rune(i))
+		g.availableChars[rune(i)] = true
 	}
-	fmt.Println(g.availableChars)
 }
 func (g *Guesser) NextGuess() string {
-	return g.guessWord("_____", []int{0,1,2,3,4}, g.availableChars)
+	defer func() { fmt.Println("total calls in try:", g.totalRecCalls) }()
+	return g.guessWord(g.nextGuess, g.nextIndices)
 }
-func (*Guesser) Feedback(guess string, feedback []WordleResponse) {}
+func (g *Guesser) Feedback(guess string, feedback []WordleResponse) {
+	for idx, outcome := range feedback {
+		correct := false
+		char := rune(guess[idx])
+		switch outcome {
+		case NotPresent:
+			if _, ok := g.availableChars[char]; ok {
+				delete(g.availableChars, char)
+			}
+		case Correct:
+			g.nextGuess = replaceAtIndex(g.nextGuess, char, idx)
+			correct = true
+		}
+		if !correct {
+			g.nextIndices = append(g.nextIndices, idx)
+		}
+	}
+}
 
-func (g *Guesser) guessWord(guess string, indices []int, availableChars []rune) string {
+func (g *Guesser) guessWord(guess string, indices []int) string {
+	g.totalRecCalls++
 	if len(indices) == 0 {
-		// fmt.Println(guess, indices)
 		return guess
 	}
 
 	remainingIndcies := make([]int, len(indices))
 	copy(remainingIndcies, indices)
 	remainingIndcies = remainingIndcies[1:]
-	for _, c := range availableChars {
+	for c := range g.availableChars {
 		newGuess := replaceAtIndex(guess, c, indices[0])
-		output := g.guessWord(newGuess, remainingIndcies, availableChars)
-		
-		if ok := g.dictionary[output]; ok {
+		output := g.guessWord(newGuess, remainingIndcies)
+
+		if _, ok := g.dictionary[output]; ok {
 			return output
 		}
 	}
